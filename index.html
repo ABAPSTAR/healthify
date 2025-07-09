@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Healthify - Tracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+   /* Global */
+body {
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, #e0f7fa, #f1f8e9);
+  margin: 0;
+  padding: 0;
+  color: #333;
+  background-attachment: fixed;
+  background-size: cover;
+}
+
+/* Header */
+header {
+  background: linear-gradient(90deg, #00796b, #004d40);
+  padding: 40px;
+  color: #fff;
+  text-align: center;
+  border-bottom: 5px solid #004d40;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+/* Container */
+.container {
+  max-width: 700px;
+  margin: 50px auto;
+  padding: 35px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 18px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(8px);
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+/* Tabs */
+.tab-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 25px;
+  gap: 12px;
+}
+
+.tab-button {
+  padding: 12px 28px;
+  font-size: 16px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  color: #004d40;
+  background-image: linear-gradient(120deg, #e0f2f1, #b2dfdb);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
+}
+
+.tab-button:hover {
+  transform: scale(1.05);
+  background-image: linear-gradient(120deg, #a5d6a7, #80cbc4);
+}
+
+.tab-button.active {
+  background-image: linear-gradient(120deg, #004d40, #00796b);
+  color: #ffffff;
+  transform: scale(1.07);
+  box-shadow: 0 6px 18px rgba(0, 121, 107, 0.5);
+  animation: glowPulse 1.5s infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 10px rgba(0, 150, 136, 0.5); }
+  50% { box-shadow: 0 0 20px rgba(0, 150, 136, 0.9); }
+}
+
+/* Form Elements */
+input, button {
+  width: 100%;
+  padding: 14px 18px;
+  margin: 12px 0;
+  font-size: 15px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  transition: all 0.25s ease;
+}
+
+input {
+  background-color: #fafafa;
+}
+
+input:focus {
+  border-color: #00796b;
+  outline: none;
+  box-shadow: 0 0 10px rgba(0, 150, 136, 0.4);
+  background-color: #f1f8e9;
+}
+
+/* Buttons */
+button {
+  background-image: linear-gradient(to right, #66bb6a, #26a69a);
+  color: white;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 6px 14px rgba(76, 175, 80, 0.3);
+  cursor: pointer;
+}
+
+button:hover {
+  background-image: linear-gradient(to right, #004d40, #00796b);
+  transform: scale(1.05);
+  box-shadow: 0 6px 18px rgba(0, 121, 107, 0.5);
+}
+
+/* Status Message */
+.status-message {
+  padding: 12px;
+  border-radius: 8px;
+  margin-top: 10px;
+  display: none;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.status-success {
+  background-color: #e6f4ea;
+  color: #2e7d32;
+  border-left: 6px solid #388e3c;
+}
+
+.status-error {
+  background-color: #fdecea;
+  color: #c62828;
+  border-left: 6px solid #e53935;
+}
+
+.hidden {
+  display: none;
+}
+
+/* Dashboard Info */
+.dashboard-info {
+  margin-bottom: 20px;
+  background: #e0f7fa;
+  padding: 18px;
+  border-radius: 12px;
+  border-left: 6px solid #00796b;
+  box-shadow: 0 4px 16px rgba(0, 121, 107, 0.15);
+}
+
+/* Health Card */
+.health-card {
+  background: linear-gradient(135deg, #f1f8e9, #f9fbe7);
+  padding: 25px;
+  border-radius: 16px;
+  margin-top: 30px;
+  box-shadow: 0 8px 20px rgba(102, 187, 106, 0.2);
+  animation: fadeIn 0.5s ease;
+}
+
+.health-card h4 {
+  color: #33691e;
+  margin-bottom: 12px;
+  font-size: 18px;
+}
+
+/* Charts */
+.chart-container {
+  margin-top: 30px;
+}
+
+canvas {
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  padding: 15px;
+}
+
+/* History Section */
+.history-section {
+  margin-top: 40px;
+}
+
+.history-section h3 {
+  margin-bottom: 20px;
+  color: #00796b;
+  font-size: 20px;
+  border-left: 5px solid #004d40;
+  padding-left: 12px;
+}
+
+.history-section table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+}
+
+.history-section th, .history-section td {
+  padding: 14px;
+  border: 1px solid #ddd;
+  text-align: center;
+  font-size: 14px;
+}
+
+.history-section th {
+  background-color: #004d40;
+  color: white;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  margin: 60px 0 20px;
+  color: #555;
+  font-size: 14px;
+}
+
+/* Fade In Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.health-card {
+    background: white;
+    padding: 20px;
+    max-width: 600px;
+    margin: 40px auto;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  .health-card h4 {
+    margin-top: 0;
+    color: #0078D7;
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  .response-box {
+    background: #f8f8f8;
+    border-radius: 10px;
+    padding: 15px;
+    min-height: 80px;
+    max-height: 200px;
+    overflow-y: auto;
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-bottom: 15px;
+  }
+
+  .placeholder {
+    color: #999;
+    font-style: italic;
+  }
+
+  .thinking {
+    font-style: italic;
+    color: #777;
+  }
+
+  .error {
+    color: red;
+    font-weight: bold;
+  }
+
+  .input-row {
+    display: flex;
+    gap: 10px;
+  }
+
+
+  .ai-response-box {
+  background: #f3f7ff;
+  padding: 16px;
+  border-radius: 12px;
+  min-height: 100px;
+  max-height: 250px;
+  overflow-y: auto;
+  margin-bottom: 16px;
+  font-size: 1rem;
+  color: #333;
+  border: 1px solid #d3e0f0;
+}
+
+.ai-response-box p {
+  margin-bottom: 10px;
+  line-height: 1.6;
+}
+
+.ai-response-box .placeholder {
+  color: #aaa;
+}
+
+
+ 
+  </style>
+</head>
+<body>
+<!-- Add this inside <head> before </head> -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<header>
+  <h1>Healthify Tracker</h1>
+  <p>Your Personal Health Assistant</p>
+</header>
+
+<div class="container">
+
+  <!-- Tab Buttons -->
+  <div class="tab-container">
+    <button class="tab-button active" id="login-tab" onclick="toggleTab('login')">Login</button>
+    <button class="tab-button" id="signup-tab" onclick="toggleTab('signup')">Sign Up</button>
+  </div>
+
+  <!-- Login Form -->
+  <form id="login-form" autocomplete="off">
+    <input type="email" id="login-email" placeholder="Email" required />
+    <input type="password" id="login-password" placeholder="Password" required />
+    <button  onclick="login()" id="login-button" type="submit">Login</button>
+    <div id="login-status" class="status-message"></div>
+  </form>
+
+  <!-- Signup Form -->
+  <form id="signup-form" class="hidden" autocomplete="off">
+    <input type="text" id="signup-name" placeholder="Full Name" required />
+    <input type="email" id="signup-email" placeholder="Email" required />
+    <input type="password" id="signup-password" placeholder="Password" required />
+    <button type="submit" onclick="signup()">Create Account</button>
+    <div id="signup-status" class="status-message"></div>
+  </form>
+
+<!-- Dashboard -->
+<div id="dashboard-section" class="hidden">
+  <div class="dashboard-info">
+    <h2>Welcome, <span id="display-name"></span> 👋</h2>
+    <p><strong>Email:</strong> <span id="display-email"></span></p>
+    <p><strong>Joined:</strong> <span id="display-created-at"></span></p>
+  </div>
+
+  <!-- Today's Stats -->
+  <div class="health-card"></div> 
+
+  <!-- Update Section -->
+  <div>
+    <h4>Update Today's Stats</h4>
+    <input type="text" id="water-input" placeholder="Water Intake (e.g. 2.5L)" />
+    <input type="text" id="steps-input" placeholder="Steps (e.g. 6500)" />
+    <input type="text" id="sleep-input" placeholder="Sleep (e.g. 7 hrs)" />
+    <button onclick="saveStats()">💾 Save Stats</button>
+  </div>
+
+  <!-- Charts -->
+  <div class="chart-container">
+    <h3>📈 Last 7 Days Health Overview</h3>
+    <canvas id="chart-stats" height="200"></canvas>
+  </div>
+
+  <!-- History Table -->
+  <div class="history-section">
+    <h3>📅 Recent 7-Day History</h3>
+    <table id="history-table">
+      <thead>
+        <tr><th>Date</th><th>Water</th><th>Steps</th><th>Sleep</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <br />
+  <button onclick="logout()">🚪 Logout</button>
+  <div class="health-card">
+    <h4>🧠 Healthify AI Assistant</h4>
+  
+    <div id="ai-response-box" class="response-box">
+      <p class="placeholder">💡 Try asking: "What's a quick post-lunch stretch?" or "How can I reduce screen fatigue?"</p>
+    </div>
+  
+    <div class="input-row">
+
+<input 
+  type="text" 
+  id="ai-input" 
+  placeholder="e.g. How to boost immunity naturally?" 
+/>
+
+      <button onclick="askGemini()">💬 Ask</button>
+    </div>
+  </div>
+  
+  
+
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+<footer>
+  &copy; 2025 Healthify App by Amisha
+</footer>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
+<!-- Your App Script -->
+<script type="module"  src="first.js"></script>
+
+</body>
+</html>
